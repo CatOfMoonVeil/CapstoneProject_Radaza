@@ -24,11 +24,19 @@ public class BookingController {
 
     @FXML
     public void initialize() {
-        currentPassenger = new Passenger(1001, "Gyro Radaza", "09123456789", "gyro.radaza@example.com");
+        // Dynamically retrieve the logged-in passenger profile from session state
+        currentPassenger = UserSession.getLoggedInPassenger();
+
+        // Fallback if accessed without login (safeguard)
+        if (currentPassenger == null) {
+            currentPassenger = new Passenger(9999, "Guest Driver Profile", "00000", "guest@ride.com");
+        }
+
         assignedDriver = new Driver(2001, "John Doe", "09876543210", "Toyota Vios (Plate: ABC-123)");
 
         log("System Initialized.");
-        log("Welcome back, " + currentPassenger.getName() + "!");
+        log("Active User Profile: " + currentPassenger.getName());
+        log("Welcome, " + currentPassenger.getName() + "!");
     }
 
     @FXML
@@ -99,7 +107,6 @@ public class BookingController {
         };
 
         rideSequenceTask.setOnSucceeded(e -> toggleFormState(false));
-
         rideSequenceTask.setOnFailed(e -> {
             log("[System Error] Background logic sequence failed.");
             toggleFormState(false);
@@ -137,6 +144,6 @@ public class BookingController {
         pickupField.setDisable(working);
         destinationField.setDisable(working);
         bookButton.setDisable(working);
-        cancelButton.setDisable(!working); // "Abort Request" becomes clickable during processing
+        cancelButton.setDisable(!working);
     }
 }

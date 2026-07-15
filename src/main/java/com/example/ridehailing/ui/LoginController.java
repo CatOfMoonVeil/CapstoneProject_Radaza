@@ -1,5 +1,7 @@
 package com.example.ridehailing.ui;
 
+import com.example.ridehailing.model.Passenger;
+import com.example.ridehailing.model.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,18 +23,44 @@ public class LoginController {
 
     @FXML
     private void handleLogin() {
-        String username = usernameField.getText().trim();
-        String password = passwordField.getText().trim();
+        String usernameInput = usernameField.getText().trim();
+        String passwordInput = passwordField.getText().trim();
 
-        if (username.isEmpty() || password.isEmpty()) {
-            errorLabel.setText("Please enter both username and password.");
+        if (usernameInput.isEmpty() || passwordInput.isEmpty()) {
+            errorLabel.setText("Please complete the form fields.");
             return;
         }
 
-        if (username.equalsIgnoreCase("passenger") && password.equals("password123")) {
+        Passenger matchedPassenger = null;
+
+        // Loop through the mock database array list for matching elements
+        for (Passenger p : UserSession.getRegisteredPassengers()) {
+            if (p.getEmail().equalsIgnoreCase(usernameInput) && passwordInput.equals("password123")) {
+                matchedPassenger = p;
+                break; // Break loop once an entry matches
+            }
+        }
+
+        if (matchedPassenger != null) {
+            // Set session variable so BookingController knows who is booking
+            UserSession.setLoggedInPassenger(matchedPassenger);
             navigateToBooking();
         } else {
-            errorLabel.setText("Invalid credentials. Try passenger / password123");
+            errorLabel.setText("Account profile not found. Please Sign Up!");
+        }
+    }
+
+    @FXML
+    private void handleNavigateToSignUp() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SignUpView.fxml"));
+            Parent signUpRoot = fxmlLoader.load();
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(signUpRoot, 450, 550));
+            stage.setTitle("Platform User Registration");
+        } catch (IOException e) {
+            errorLabel.setText("Could not open registration portal.");
+            e.printStackTrace();
         }
     }
 
@@ -40,16 +68,11 @@ public class LoginController {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BookingView.fxml"));
             Parent bookingRoot = fxmlLoader.load();
-
             Stage stage = (Stage) loginButton.getScene().getWindow();
-
-            Scene scene = new Scene(bookingRoot, 450, 550);
-            stage.setScene(scene);
-            stage.setTitle("Need a Ride?");
-            stage.show();
-
+            stage.setScene(new Scene(bookingRoot, 450, 550));
+            stage.setTitle("Capstone Ride-Hailing Platform Framework");
         } catch (IOException e) {
-            errorLabel.setText("bad navigation screen request, man... nice try.");
+            errorLabel.setText("Failed to transition navigation screens.");
             e.printStackTrace();
         }
     }
