@@ -8,31 +8,47 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<VBox alignment="CENTER" spacing="25.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.ridehailing.ui.LoginController" prefWidth="450.0" prefHeight="550.0"
-      style="-fx-background-color: #f8f9fa;">
-    <padding>
-        <Insets bottom="30.0" left="40.0" right="40.0" top="30.0"/>
-    </padding>
+      style="-fx-background-color: #1e272e;"> <padding>
+    <Insets bottom="40.0" left="45.0" right="45.0" top="40.0"/>
+</padding>
 
-    <Label text="Platform Login" textFill="#2c3e50">
-        <font>
-            <Font name="System Bold" size="24.0" />
-        </font>
-    </Label>
-
-    <VBox spacing="6.0" alignment="CENTER_LEFT">
-        <Label text="Username / Email:" textFill="#34495e" style="-fx-font-weight: bold;" />
-        <TextField fx:id="usernameField" promptText="Enter your username" prefHeight="35.0"/>
+    <VBox alignment="CENTER" spacing="5.0">
+        <Label text="GoRide" textFill="#00d2d3">
+            <font>
+                <Font name="System Bold" size="36.0" />
+            </font>
+        </Label>
+        <Label text="Your journey starts here" textFill="#84817a">
+            <font>
+                <Font name="System Italic" size="14.0" />
+            </font>
+        </Label>
     </VBox>
 
-    <VBox spacing="6.0" alignment="CENTER_LEFT">
-        <Label text="Password:" textFill="#34495e" style="-fx-font-weight: bold;" />
-        <PasswordField fx:id="passwordField" promptText="Enter your password" prefHeight="35.0"/>
+    <VBox spacing="15.0" style="-fx-background-color: #2f3640; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);">
+        <padding>
+            <Insets bottom="25.0" left="20.0" right="20.0" top="25.0"/>
+        </padding>
+
+        <VBox spacing="6.0" alignment="CENTER_LEFT">
+            <Label text="Username or Email" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+            <TextField fx:id="usernameField" promptText="e.g. passenger" prefHeight="38.0"
+                       style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #dcdde1; -fx-background-radius: 6px;"/>
+        </VBox>
+
+        <VBox spacing="6.0" alignment="CENTER_LEFT">
+            <Label text="Password" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
+            <PasswordField fx:id="passwordField" promptText="••••••••" prefHeight="38.0"
+                           style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #dcdde1; -fx-background-radius: 6px;"/>
+        </VBox>
     </VBox>
 
-    <Button fx:id="loginButton" text="Login" onAction="#handleLogin" prefWidth="200.0" prefHeight="35.0"
-            style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+    <VBox alignment="CENTER" spacing="10.0">
+        <Button fx:id="loginButton" text="SIGN IN" onAction="#handleLogin" prefWidth="240.0" prefHeight="42.0"
+                style="-fx-background-color: #00d2d3; -fx-text-fill: #1e272e; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25px; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,210,211,0.4), 8, 0, 0, 3);"/>
 
-    <Label fx:id="errorLabel" textFill="#e74c3c" style="-fx-font-weight: bold;" />
+        <Label fx:id="errorLabel" textFill="#ff4757" style="-fx-font-weight: bold; -fx-font-size: 12px;" wrapText="true" alignment="CENTER"/>
+    </VBox>
 </VBox>

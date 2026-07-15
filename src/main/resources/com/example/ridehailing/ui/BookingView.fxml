@@ -9,39 +9,49 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="com.example.ridehailing.ui.BookingController" prefWidth="450.0" prefHeight="550.0"
-      style="-fx-background-color: #f8f9fa;">
+      style="-fx-background-color: #1e272e;">
     <padding>
-        <Insets bottom="20.0" left="25.0" right="25.0" top="25.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
     </padding>
 
-    <Label text="Ride Request Terminal" textFill="#2c3e50">
-        <font>
-            <Font name="System Bold" size="22.0" />
-        </font>
-    </Label>
-
-    <VBox spacing="6.0" alignment="CENTER_LEFT">
-        <Label text="Pickup Reference Point:" textFill="#34495e" style="-fx-font-weight: bold;" />
-        <TextField fx:id="pickupField" promptText="e.g. Cebu IT Park, Tower 3" prefHeight="35.0"/>
-    </VBox>
-
-    <VBox spacing="6.0" alignment="CENTER_LEFT">
-        <Label text="Target Destination:" textFill="#34495e" style="-fx-font-weight: bold;" />
-        <TextField fx:id="destinationField" promptText="e.g. SM Seaside City" prefHeight="35.0"/>
-    </VBox>
-
-    <HBox spacing="15.0" alignment="CENTER" prefHeight="50.0">
-        <Button fx:id="bookButton" text="Confirm &amp; Request" onAction="#handleBookRide" prefWidth="180.0" prefHeight="35.0"
-                style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
-        <Button fx:id="cancelButton" text="Abort Request" onAction="#handleCancelRide" disable="true" prefWidth="180.0" prefHeight="35.0"
-                style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-font-weight: bold; -fx-cursor: hand;"/>
+    <HBox alignment="CENTER_LEFT" prefHeight="40.0">
+        <Label text="Dispatch Terminal" textFill="#ffffff">
+            <font>
+                <Font name="System Bold" size="22.0" />
+            </font>
+        </Label>
     </HBox>
 
-    <VBox spacing="6.0" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
-        <Label text="Platform Transaction History Pipeline:" textFill="#34495e" style="-fx-font-weight: bold;" />
+    <VBox spacing="15.0" style="-fx-background-color: #2f3640; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);">
+        <padding>
+            <Insets bottom="20.0" left="15.0" right="15.0" top="20.0"/>
+        </padding>
+
+        <VBox spacing="6.0" alignment="CENTER_LEFT">
+            <Label text="PICKUP LOCATION" textFill="#00d2d3" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
+            <TextField fx:id="pickupField" promptText="Where should the driver pick you up?" prefHeight="38.0"
+                       style="-fx-background-color: #3d3d3d; -fx-text-fill: white; -fx-prompt-text-fill: #718093; -fx-background-radius: 6px; -fx-border-color: #718093; -fx-border-radius: 6px;"/>
+        </VBox>
+
+        <VBox spacing="6.0" alignment="CENTER_LEFT">
+            <Label text="DROP-OFF DESTINATION" textFill="#00d2d3" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
+            <TextField fx:id="destinationField" promptText="Enter destination endpoint..." prefHeight="38.0"
+                       style="-fx-background-color: #3d3d3d; -fx-text-fill: white; -fx-prompt-text-fill: #718093; -fx-background-radius: 6px; -fx-border-color: #718093; -fx-border-radius: 6px;"/>
+        </VBox>
+
+        <HBox spacing="12.0" alignment="CENTER" prefHeight="45.0">
+            <Button fx:id="bookButton" text="Request Ride" onAction="#handleBookRide" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="38.0"
+                    style="-fx-background-color: #10ac84; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand;"/>
+            <Button fx:id="cancelButton" text="Abort" onAction="#handleCancelRide" disable="true" prefWidth="100.0" prefHeight="38.0"
+                    style="-fx-background-color: #ee5253; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand;"/>
+        </HBox>
+    </VBox>
+
+    <VBox spacing="8.0" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
+        <Label text="LIVE SYSTEM MONITOR" textFill="#84817a" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
         <TextArea fx:id="statusLogs" VBox.vgrow="ALWAYS" editable="false" wrapText="true"
-                  style="-fx-font-family: 'Courier New'; -fx-font-size: 12px;"/>
+                  style="-fx-control-inner-background: #2f3640; -fx-text-fill: #00ff00; -fx-font-family: 'Consolas', 'Courier New', monospace; -fx-font-size: 12px; -fx-background-radius: 8px; -fx-border-color: #718093; -fx-border-radius: 8px;"/>
     </VBox>
 </VBox>

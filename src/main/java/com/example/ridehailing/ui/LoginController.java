@@ -50,11 +50,11 @@ public class LoginController {
             // Swap the scene content over to the primary booking screen
             Scene scene = new Scene(bookingRoot, 450, 550);
             stage.setScene(scene);
-            stage.setTitle("Capstone Ride-Hailing Platform Framework");
+            stage.setTitle("Need a Ride?");
             stage.show();
 
         } catch (IOException e) {
-            errorLabel.setText("Failed to transition navigation screens.");
+            errorLabel.setText("bad navigation screen request, man... nice try.");
             e.printStackTrace();
         }
     }

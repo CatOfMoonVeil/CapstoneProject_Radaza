@@ -16,7 +16,7 @@ public class MainApplication extends Application {
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root, 450, 550);
-        stage.setTitle("Platform Gateway Authentication");
+        stage.setTitle("Login");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
