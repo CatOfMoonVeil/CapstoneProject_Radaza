@@ -1,39 +1,36 @@
-package com.capstone.ridehail.model;
+package com.example.ridehailing.model;
 
-public class Driver {
+public class Driver extends User {
     private int driverId;
-    private String name;
-    private String phone;
     private String vehicle;
-    private String status; // e.g., "Available", "Busy", "Offline"
+    private String status;
 
     public Driver(int driverId, String name, String phone, String vehicle) {
+        super(name, phone, "");
         this.driverId = driverId;
-        this.name = name;
-        this.phone = phone;
         this.vehicle = vehicle;
         this.status = "Available";
     }
 
-    // Methods from Class Diagram
     public void acceptRide(Ride ride) {
         this.status = "Busy";
-        System.out.println("Driver " + name + " accepted ride " + ride.getRideId());
+        System.out.println("Driver " + name + " accepted ride assignment #" + ride.getRideId());
     }
 
     public void rejectRide(Ride ride) {
-        System.out.println("Driver " + name + " rejected ride " + ride.getRideId());
+        System.out.println("Driver " + name + " rejected ride assignment #" + ride.getRideId());
     }
 
     public void startRide(Ride ride) {
-        System.out.println("Driver " + name + " started the trip.");
+        System.out.println("Driver " + name + " started the trip to " + ride.getDestination());
     }
 
     public void completeRide(Ride ride) {
         this.status = "Available";
-        System.out.println("Driver " + name + " completed the trip.");
+        System.out.println("Driver " + name + " arrived at destination. Trip complete.");
     }
 
-    // Getters and Setters
-    public String getName() { return name; }
+    public int getDriverId() { return driverId; }
+    public String getVehicle() { return vehicle; }
+    public String getStatus() { return status; }
 }

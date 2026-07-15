@@ -1,8 +1,7 @@
-module com.example.project_radaza {
+module com.example.ridehailing {
     requires javafx.controls;
     requires javafx.fxml;
 
-
-    opens com.example.project_radaza to javafx.fxml;
-    exports com.example.project_radaza;
+    opens com.example.ridehailing.ui to javafx.fxml;
+    exports com.example.ridehailing.ui;
 }

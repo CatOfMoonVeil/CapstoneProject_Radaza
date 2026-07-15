@@ -1,4 +1,4 @@
-package com.capstone.ridehail.model;
+package com.example.ridehailing.model;
 
 public class Payment {
     private int paymentId;
@@ -15,13 +15,14 @@ public class Payment {
 
     public void processPayment() {
         this.paymentStatus = "Successful";
-        System.out.println("Payment of $" + amount + " processed successfully via " + paymentMethod);
+        System.out.println("Transaction Processing: $" + amount + " charged via " + paymentMethod);
     }
 
     public void refundPayment() {
         this.paymentStatus = "Refunded";
-        System.out.println("Payment refunded.");
+        System.out.println("Transaction Voided: Refunded $" + amount);
     }
 
     public double getAmount() { return amount; }
+    public String getPaymentStatus() { return paymentStatus; }
 }
