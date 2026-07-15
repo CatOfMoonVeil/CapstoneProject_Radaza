@@ -33,11 +33,10 @@ public class LoginController {
 
         Passenger matchedPassenger = null;
 
-        // Loop through the mock database array list for matching elements
         for (Passenger p : UserSession.getRegisteredPassengers()) {
             if (p.getEmail().equalsIgnoreCase(usernameInput) && passwordInput.equals("password123")) {
                 matchedPassenger = p;
-                break; // Break loop once an entry matches
+                break;
             }
         }
 

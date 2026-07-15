@@ -33,7 +33,6 @@ public class SignUpController {
             return;
         }
 
-        // Generate a random ID for the new Passenger instance
         int generatedId = 1000 + new Random().nextInt(9000);
 
         Passenger newPassenger = new Passenger(generatedId, name, phone, email);
@@ -41,7 +40,6 @@ public class SignUpController {
 
         statusLabel.setText("Registration successful! Redirecting...");
 
-        // Return back to Login screen automatically
         handleBackToLogin();
     }
 
