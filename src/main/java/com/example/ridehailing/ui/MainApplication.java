@@ -11,7 +11,6 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        // Updated pointer to direct loading sequence onto the LoginView target
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LoginView.fxml"));
         Parent root = fxmlLoader.load();
 

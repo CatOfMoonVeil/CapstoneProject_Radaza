@@ -16,7 +16,6 @@ public class Ride {
     }
 
     public double calculateFare() {
-        // Base structure mimicking your class diagram's method
         return 15.50;
     }
 

@@ -24,13 +24,11 @@ public class LoginController {
         String username = usernameField.getText().trim();
         String password = passwordField.getText().trim();
 
-        // Basic validation matching your Use Case diagram flow (Register/Login)
         if (username.isEmpty() || password.isEmpty()) {
             errorLabel.setText("Please enter both username and password.");
             return;
         }
 
-        // Simulating successful validation check
         if (username.equalsIgnoreCase("passenger") && password.equals("password123")) {
             navigateToBooking();
         } else {
@@ -40,14 +38,11 @@ public class LoginController {
 
     private void navigateToBooking() {
         try {
-            // Load the BookingView FXML file
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BookingView.fxml"));
             Parent bookingRoot = fxmlLoader.load();
 
-            // Get the current window Stage from the button context
             Stage stage = (Stage) loginButton.getScene().getWindow();
 
-            // Swap the scene content over to the primary booking screen
             Scene scene = new Scene(bookingRoot, 450, 550);
             stage.setScene(scene);
             stage.setTitle("Need a Ride?");
