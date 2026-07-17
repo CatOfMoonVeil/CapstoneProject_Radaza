@@ -4,9 +4,15 @@ import com.example.ridehailing.model.*;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class BookingController {
 
@@ -14,6 +20,7 @@ public class BookingController {
     @FXML private TextField destinationField;
     @FXML private Button bookButton;
     @FXML private Button cancelButton;
+    @FXML private Button logoutButton;
     @FXML private TextArea statusLogs;
 
     private Passenger currentPassenger;
@@ -135,6 +142,28 @@ public class BookingController {
         }
     }
 
+    @FXML
+    private void handleLogOut() {
+        // Cancel running ride task prior to logging out
+        if (rideSequenceTask != null && rideSequenceTask.isRunning()) {
+            rideSequenceTask.cancel();
+        }
+
+        // Clean up global static session
+        UserSession.setLoggedInPassenger(null);
+
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/LoginView.fxml"));
+            Parent loginRoot = fxmlLoader.load();
+            Stage stage = (Stage) logoutButton.getScene().getWindow();
+            stage.setScene(new Scene(loginRoot, 450, 550));
+            stage.setTitle("GoRide Platform Login");
+        } catch (IOException e) {
+            log("[System Error] Failed to return to authentication terminal.");
+            e.printStackTrace();
+        }
+    }
+
     private void log(String message) {
         statusLogs.appendText(message + "\n");
     }
@@ -148,5 +177,6 @@ public class BookingController {
         destinationField.setDisable(working);
         bookButton.setDisable(working);
         cancelButton.setDisable(!working);
+        logoutButton.setDisable(working); // Disable logout during a live ride booking cycle
     }
 }

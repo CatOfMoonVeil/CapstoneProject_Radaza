@@ -9,49 +9,57 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.ridehailing.ui.BookingController" prefWidth="450.0" prefHeight="550.0"
+<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.ridehailing.ui.BookingController" prefWidth="450.0" prefHeight="580.0"
       style="-fx-background-color: #1e272e;">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="25.0" left="35.0" right="35.0" top="25.0"/>
     </padding>
 
-    <HBox alignment="CENTER_LEFT" prefHeight="40.0">
-        <Label text="Dispatch Terminal" textFill="#ffffff">
+    <VBox alignment="CENTER" spacing="5.0">
+        <Label text="GoRide Passenger Terminal" textFill="#00d2d3">
             <font>
-                <Font name="System Bold" size="22.0" />
+                <Font name="System Bold" size="28.0" />
             </font>
         </Label>
-    </HBox>
+        <Label text="Book a secure trip instantly" textFill="#84817a">
+            <font>
+                <Font name="System Italic" size="13.0" />
+            </font>
+        </Label>
+    </VBox>
 
-    <VBox spacing="15.0" style="-fx-background-color: #2f3640; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 8, 0, 0, 4);">
+    <VBox spacing="12.0" style="-fx-background-color: #2f3640; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);">
         <padding>
-            <Insets bottom="20.0" left="15.0" right="15.0" top="20.0"/>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0"/>
         </padding>
 
-        <VBox spacing="6.0" alignment="CENTER_LEFT">
-            <Label text="PICKUP LOCATION" textFill="#00d2d3" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
-            <TextField fx:id="pickupField" promptText="Where should the driver pick you up?" prefHeight="38.0"
-                       style="-fx-background-color: #3d3d3d; -fx-text-fill: white; -fx-prompt-text-fill: #718093; -fx-background-radius: 6px; -fx-border-color: #718093; -fx-border-radius: 6px;"/>
+        <VBox spacing="4.0" alignment="CENTER_LEFT">
+            <Label text="PICKUP LOCATION" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
+            <TextField fx:id="pickupField" promptText="Enter starting point" prefHeight="35.0"
+                       style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
 
-        <VBox spacing="6.0" alignment="CENTER_LEFT">
-            <Label text="DROP-OFF DESTINATION" textFill="#00d2d3" style="-fx-font-weight: bold; -fx-font-size: 11px; -fx-letter-spacing: 1px;" />
-            <TextField fx:id="destinationField" promptText="Enter destination endpoint..." prefHeight="38.0"
-                       style="-fx-background-color: #3d3d3d; -fx-text-fill: white; -fx-prompt-text-fill: #718093; -fx-background-radius: 6px; -fx-border-color: #718093; -fx-border-radius: 6px;"/>
+        <VBox spacing="4.0" alignment="CENTER_LEFT">
+            <Label text="DESTINATION" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
+            <TextField fx:id="destinationField" promptText="Enter destination" prefHeight="35.0"
+                       style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
-
-        <HBox spacing="12.0" alignment="CENTER" prefHeight="45.0">
-            <Button fx:id="bookButton" text="Request Ride" onAction="#handleBookRide" HBox.hgrow="ALWAYS" maxWidth="Infinity" prefHeight="38.0"
-                    style="-fx-background-color: #10ac84; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand;"/>
-            <Button fx:id="cancelButton" text="Abort" onAction="#handleCancelRide" disable="true" prefWidth="100.0" prefHeight="38.0"
-                    style="-fx-background-color: #ee5253; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 8px; -fx-cursor: hand;"/>
-        </HBox>
     </VBox>
 
-    <VBox spacing="8.0" alignment="CENTER_LEFT" VBox.vgrow="ALWAYS">
-        <Label text="LIVE SYSTEM MONITOR" textFill="#84817a" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
-        <TextArea fx:id="statusLogs" VBox.vgrow="ALWAYS" editable="false" wrapText="true"
-                  style="-fx-control-inner-background: #2f3640; -fx-text-fill: #00ff00; -fx-font-family: 'Consolas', 'Courier New', monospace; -fx-font-size: 12px; -fx-background-radius: 8px; -fx-border-color: #718093; -fx-border-radius: 8px;"/>
+    <HBox spacing="15.0" alignment="CENTER">
+        <Button fx:id="bookButton" text="BOOK NOW" onAction="#handleBookRide" prefWidth="180.0" prefHeight="40.0"
+                style="-fx-background-color: #00d2d3; -fx-text-fill: #1e272e; -fx-font-weight: bold; -fx-background-radius: 20px; -fx-cursor: hand;"/>
+        <Button fx:id="cancelButton" text="CANCEL" onAction="#handleCancelRide" disable="true" prefWidth="180.0" prefHeight="40.0"
+                style="-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20px; -fx-cursor: hand;"/>
+    </HBox>
+
+    <VBox spacing="8.0" VBox.vgrow="ALWAYS">
+        <Label text="Terminal Pipeline Connection" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 12px;"/>
+        <TextArea fx:id="statusLogs" editable="false" wrapText="true" VBox.vgrow="ALWAYS"
+                  style="-fx-control-inner-background: #2f3640; -fx-text-fill: #00d2d3; -fx-font-family: 'Courier New'; -fx-font-size: 11px; -fx-background-color: #2f3640;"/>
     </VBox>
+
+    <Button fx:id="logoutButton" text="LOG OUT" onAction="#handleLogOut" prefWidth="120.0" prefHeight="30.0"
+            style="-fx-background-color: #718093; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15px; -fx-cursor: hand;"/>
 </VBox>
