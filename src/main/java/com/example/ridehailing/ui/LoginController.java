@@ -27,18 +27,31 @@ public class LoginController {
         String passwordInput = passwordField.getText().trim();
 
         if (usernameInput.isEmpty() || passwordInput.isEmpty()) {
+            errorLabel.setStyle("-fx-text-fill: #ff4757;");
             errorLabel.setText("Please complete the form fields.");
             return;
         }
 
-        Passenger matchedPassenger = UserSession.login(usernameInput, passwordInput);
+        String role = UserSession.checkUserRoleAndLogin(usernameInput, passwordInput);
 
-        if (matchedPassenger != null) {
-            UserSession.setLoggedInPassenger(matchedPassenger);
-            navigateToBooking();
+        if ("PASSENGER".equals(role)) {
+            Passenger matchedPassenger = UserSession.login(usernameInput, passwordInput);
+            if (matchedPassenger != null) {
+                UserSession.setLoggedInPassenger(matchedPassenger);
+                navigateToBooking();
+            } else {
+                showErrorMessage();
+            }
+        } else if ("DRIVER".equals(role)) {
+            navigateToDriverDashboard();
         } else {
-            errorLabel.setText("Account profile not found or invalid password.");
+            showErrorMessage();
         }
+    }
+
+    private void showErrorMessage() {
+        errorLabel.setStyle("-fx-text-fill: #ff4757;");
+        errorLabel.setText("Account profile not found or invalid password.");
     }
 
     @FXML
@@ -55,14 +68,13 @@ public class LoginController {
         }
     }
 
-    // New navigation handler to open the Driver Sign-Up screen
     @FXML
     private void handleNavigateToDriverSignUp() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/DriverSignUpView.fxml"));
             Parent signUpRoot = fxmlLoader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(signUpRoot, 450, 580)); // Height adjusted to 580 to fit the vehicle info field
+            stage.setScene(new Scene(signUpRoot, 450, 580)); // Slightly taller to fit vehicle details
             stage.setTitle("Driver Registration");
         } catch (IOException e) {
             errorLabel.setText("Could not open driver registration.");
@@ -79,6 +91,20 @@ public class LoginController {
             stage.setTitle("GoRide Terminal Panel");
         } catch (IOException e) {
             errorLabel.setText("Failed to transition navigation screens.");
+            e.printStackTrace();
+        }
+    }
+
+    private void navigateToDriverDashboard() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/DriverDashboardView.fxml"));
+            Parent driverRoot = fxmlLoader.load();
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(driverRoot, 450, 550));
+            stage.setTitle("GoRide Driver Command Center");
+        } catch (IOException e) {
+            errorLabel.setStyle("-fx-text-fill: #ff4757;");
+            errorLabel.setText("Failed to open Driver command center.");
             e.printStackTrace();
         }
     }

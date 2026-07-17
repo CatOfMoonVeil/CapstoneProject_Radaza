@@ -22,7 +22,6 @@ public class BookingController {
 
     @FXML
     public void initialize() {
-        // Retrieve the passenger from the active session
         currentPassenger = UserSession.getLoggedInPassenger();
 
         if (currentPassenger == null) {
@@ -44,7 +43,6 @@ public class BookingController {
             return;
         }
 
-        // Creates ride which internally generates a dynamic fare ($1.00 - $200.99)
         activeRide = new Ride(7701, pickup, destination);
         currentPassenger.bookRide(activeRide);
 
@@ -66,7 +64,6 @@ public class BookingController {
                     Thread.sleep(1000);
                 }
 
-                // Query the database dynamically for an available driver
                 Driver dbDriver = UserSession.fetchAvailableDriver();
 
                 if (dbDriver == null) {
@@ -75,7 +72,6 @@ public class BookingController {
                     return null;
                 }
 
-                // Log output from database records
                 updateLogAsync("Database Log -> Retrieved Driver ID #" + dbDriver.getDriverId());
                 updateLogAsync("Assigned Unit: " + dbDriver.getName() + " running a " + dbDriver.getVehicle());
                 dbDriver.acceptRide(activeRide);
