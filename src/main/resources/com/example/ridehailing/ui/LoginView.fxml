@@ -36,13 +36,13 @@
 
         <VBox spacing="6.0" alignment="CENTER_LEFT">
             <Label text="Email Address (Username)" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
-            <TextField fx:id="usernameField" promptText="e.g. gyro@gmail.com" prefHeight="38.0"
+            <TextField fx:id="usernameField" promptText="e.g. xyz@email.com" prefHeight="38.0"
                        style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
 
         <VBox spacing="6.0" alignment="CENTER_LEFT">
             <Label text="Password" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 13px;" />
-            <PasswordField fx:id="passwordField" promptText="Password: password123" prefHeight="38.0"
+            <PasswordField fx:id="passwordField" promptText="Enter Password" prefHeight="38.0"
                            style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
     </VBox>
@@ -51,11 +51,13 @@
         <Button fx:id="loginButton" text="SIGN IN" onAction="#handleLogin" prefWidth="240.0" prefHeight="42.0"
                 style="-fx-background-color: #00d2d3; -fx-text-fill: #1e272e; -fx-font-weight: bold; -fx-font-size: 14px; -fx-background-radius: 25px; -fx-cursor: hand; -fx-effect: dropshadow(three-pass-box, rgba(0,210,211,0.4), 8, 0, 0, 3);"/>
 
-        <HBox spacing="5.0" alignment="CENTER">
-            <Label text="New here?" textFill="#84817a"/>
-            <Button text="Sign Up" onAction="#handleNavigateToSignUp" style="-fx-background-color: transparent; -fx-text-fill: #00d2d3; -fx-underline: true; -fx-cursor: hand;"/>
-        </HBox>
-
         <Label fx:id="errorLabel" textFill="#ff4757" style="-fx-font-weight: bold; -fx-font-size: 12px;" wrapText="true" alignment="CENTER"/>
     </VBox>
+
+    <HBox spacing="10.0" alignment="CENTER">
+        <Label text="New here?" textFill="#84817a"/>
+        <Button text="Sign Up" onAction="#handleNavigateToSignUp" style="-fx-background-color: transparent; -fx-text-fill: #00d2d3; -fx-underline: true; -fx-cursor: hand;"/>
+        <Label text="|" textFill="#84817a"/>
+        <Button text="Join as Driver" onAction="#handleNavigateToDriverSignUp" style="-fx-background-color: transparent; -fx-text-fill: #10ac84; -fx-underline: true; -fx-cursor: hand;"/>
+    </HBox>
 </VBox>

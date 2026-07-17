@@ -17,22 +17,17 @@ public class BookingController {
     @FXML private TextArea statusLogs;
 
     private Passenger currentPassenger;
-    private Driver assignedDriver;
     private Ride activeRide;
-
     private Task<Void> rideSequenceTask;
 
     @FXML
     public void initialize() {
-        // Dynamically retrieve the logged-in passenger profile from session state
+        // Retrieve the passenger from the active session
         currentPassenger = UserSession.getLoggedInPassenger();
 
-        // Fallback if accessed without login (safeguard)
         if (currentPassenger == null) {
-            currentPassenger = new Passenger(9999, "Guest Driver Profile", "00000", "guest@ride.com");
+            currentPassenger = new Passenger(9999, "Guest Profile", "00000", "guest@ride.com");
         }
-
-        assignedDriver = new Driver(2001, "John Doe", "09876543210", "Toyota Vios (Plate: ABC-123)");
 
         log("System Initialized.");
         log("Active User Profile: " + currentPassenger.getName());
@@ -49,6 +44,7 @@ public class BookingController {
             return;
         }
 
+        // Creates ride which internally generates a dynamic fare ($1.00 - $200.99)
         activeRide = new Ride(7701, pickup, destination);
         currentPassenger.bookRide(activeRide);
 
@@ -57,29 +53,38 @@ public class BookingController {
 
         log("--- Sequence: Ride Request Registered ---");
         log("From: " + activeRide.getPickupLocation() + " -> To: " + activeRide.getDestination());
-        log("Calculated Fare Estimate: $" + activeRide.getFare());
+        log(String.format("Calculated Fare Estimate: $%.2f", activeRide.getFare()));
 
         rideSequenceTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
                 updateLogAsync("\n--- Sequence: Driver Assignment Engine ---");
-                updateLogAsync("System: Scanning active vehicle grid... (Waiting for driver to accept)");
+                updateLogAsync("System: Querying active database grids... (Standby)");
 
-                for (int i = 3; i > 0; i--) {
+                for (int i = 2; i > 0; i--) {
                     if (isCancelled()) return null;
-                    updateLogAsync("Searching... (" + i + "s remaining)");
                     Thread.sleep(1000);
                 }
 
-                if (isCancelled()) return null;
+                // Query the database dynamically for an available driver
+                Driver dbDriver = UserSession.fetchAvailableDriver();
 
-                updateLogAsync("Assigned Unit: " + assignedDriver.getName() + " running a " + assignedDriver.getVehicle());
-                assignedDriver.acceptRide(activeRide);
+                if (dbDriver == null) {
+                    updateLogAsync("[Database System Message] No available drivers in this quadrant. Request failed.");
+                    cancel();
+                    return null;
+                }
+
+                // Log output from database records
+                updateLogAsync("Database Log -> Retrieved Driver ID #" + dbDriver.getDriverId());
+                updateLogAsync("Assigned Unit: " + dbDriver.getName() + " running a " + dbDriver.getVehicle());
+                dbDriver.acceptRide(activeRide);
 
                 updateLogAsync("\n--- Sequence: Transit Execution ---");
+                updateLogAsync("Driver Info: Contact Unit at " + dbDriver.getPhone());
                 updateLogAsync("Driver: Unit arrived at " + activeRide.getPickupLocation());
                 activeRide.updateStatus("In Progress");
-                assignedDriver.startRide(activeRide);
+                dbDriver.startRide(activeRide);
 
                 for (int i = 2; i > 0; i--) {
                     if (isCancelled()) return null;
@@ -89,17 +94,18 @@ public class BookingController {
 
                 if (isCancelled()) return null;
 
-                assignedDriver.completeRide(activeRide);
+                dbDriver.completeRide(activeRide);
                 activeRide.updateStatus("Completed");
 
                 updateLogAsync("\n--- Sequence: Billing Gateway ---");
                 Payment transaction = new Payment(9981, activeRide.getFare(), "Digital Wallet");
                 currentPassenger.makePayment(transaction);
                 transaction.processPayment();
-                updateLogAsync("Gateway Status: Payment Verified [" + transaction.getPaymentStatus() + "]");
+
+                updateLogAsync(String.format("Gateway Status: Payment Verified [$%.2f charged]", activeRide.getFare()));
 
                 updateLogAsync("\n--- Sequence: Rating & Dispatch ---");
-                currentPassenger.rateDriver(assignedDriver, 5);
+                currentPassenger.rateDriver(dbDriver, 5);
                 updateLogAsync("System: Transaction complete. Standby mode active.");
 
                 return null;
@@ -111,6 +117,7 @@ public class BookingController {
             log("[System Error] Background logic sequence failed.");
             toggleFormState(false);
         });
+        rideSequenceTask.setOnCancelled(e -> toggleFormState(false));
 
         Thread backgroundThread = new Thread(rideSequenceTask);
         backgroundThread.setDaemon(true);

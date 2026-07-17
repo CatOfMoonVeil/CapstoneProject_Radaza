@@ -31,28 +31,20 @@ public class LoginController {
             return;
         }
 
-        Passenger matchedPassenger = null;
-
-        for (Passenger p : UserSession.getRegisteredPassengers()) {
-            if (p.getEmail().equalsIgnoreCase(usernameInput) && passwordInput.equals("password123")) {
-                matchedPassenger = p;
-                break;
-            }
-        }
+        Passenger matchedPassenger = UserSession.login(usernameInput, passwordInput);
 
         if (matchedPassenger != null) {
-            // Set session variable so BookingController knows who is booking
             UserSession.setLoggedInPassenger(matchedPassenger);
             navigateToBooking();
         } else {
-            errorLabel.setText("Account profile not found. Please Sign Up!");
+            errorLabel.setText("Account profile not found or invalid password.");
         }
     }
 
     @FXML
     private void handleNavigateToSignUp() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("SignUpView.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/SignUpView.fxml"));
             Parent signUpRoot = fxmlLoader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(new Scene(signUpRoot, 450, 550));
@@ -63,13 +55,28 @@ public class LoginController {
         }
     }
 
+    // New navigation handler to open the Driver Sign-Up screen
+    @FXML
+    private void handleNavigateToDriverSignUp() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/DriverSignUpView.fxml"));
+            Parent signUpRoot = fxmlLoader.load();
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.setScene(new Scene(signUpRoot, 450, 580)); // Height adjusted to 580 to fit the vehicle info field
+            stage.setTitle("Driver Registration");
+        } catch (IOException e) {
+            errorLabel.setText("Could not open driver registration.");
+            e.printStackTrace();
+        }
+    }
+
     private void navigateToBooking() {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("BookingView.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/BookingView.fxml"));
             Parent bookingRoot = fxmlLoader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.setScene(new Scene(bookingRoot, 450, 550));
-            stage.setTitle("Capstone Ride-Hailing Platform Framework");
+            stage.setTitle("GoRide Terminal Panel");
         } catch (IOException e) {
             errorLabel.setText("Failed to transition navigation screens.");
             e.printStackTrace();

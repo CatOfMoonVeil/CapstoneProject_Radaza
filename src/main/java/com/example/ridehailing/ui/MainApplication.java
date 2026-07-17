@@ -11,11 +11,12 @@ import java.io.IOException;
 public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("LoginView.fxml"));
+        // Absolute classpath resources loader
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/LoginView.fxml"));
         Parent root = fxmlLoader.load();
 
         Scene scene = new Scene(root, 450, 550);
-        stage.setTitle("Login");
+        stage.setTitle("GoRide Gateway");
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();

@@ -1,5 +1,7 @@
 package com.example.ridehailing.model;
 
+import java.util.Random;
+
 public class Ride {
     private int rideId;
     private String pickupLocation;
@@ -12,15 +14,16 @@ public class Ride {
         this.pickupLocation = pickupLocation;
         this.destination = destination;
         this.status = "Requested";
-        this.fare = calculateFare();
+        this.fare = calculateFare(); // Calculates a dynamic random fare value
     }
 
     public double calculateFare() {
-        return 15.50;
-    }
+        Random random = new Random();
+        double min = 1.00;
+        double max = 200.99;
+        double randomValue = min + (max - min) * random.nextDouble();
 
-    public void updateStatus(String status) {
-        this.status = status;
+        return Math.round(randomValue * 100.0) / 100.0;
     }
 
     public int getRideId() { return rideId; }
@@ -28,4 +31,5 @@ public class Ride {
     public String getDestination() { return destination; }
     public double getFare() { return fare; }
     public String getStatus() { return status; }
+    public void updateStatus(String status) { this.status = status; }
 }

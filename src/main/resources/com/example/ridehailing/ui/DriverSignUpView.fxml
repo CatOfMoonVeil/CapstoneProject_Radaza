@@ -8,52 +8,58 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.example.ridehailing.ui.SignUpController" prefWidth="450.0" prefHeight="550.0"
+<VBox alignment="CENTER" spacing="15.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.ridehailing.ui.DriverSignUpController" prefWidth="450.0" prefHeight="580.0"
       style="-fx-background-color: #1e272e;">
     <padding>
-        <Insets bottom="30.0" left="40.0" right="40.0" top="30.0"/>
+        <Insets bottom="25.0" left="40.0" right="40.0" top="25.0"/>
     </padding>
 
-    <Label text="Create Account" textFill="#00d2d3">
+    <Label text="Driver Registration" textFill="#00d2d3">
         <font>
             <Font name="System Bold" size="26.0" />
         </font>
     </Label>
 
-    <VBox spacing="12.0" style="-fx-background-color: #2f3640; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);">
+    <VBox spacing="10.0" style="-fx-background-color: #2f3640; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 10, 0, 0, 5);">
         <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0"/>
         </padding>
 
-        <VBox spacing="4.0" alignment="CENTER_LEFT">
-            <Label text="Full Name" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+        <VBox spacing="3.0" alignment="CENTER_LEFT">
+            <Label text="Full Name" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
             <TextField fx:id="nameField" promptText="Your name" prefHeight="35.0"
                        style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
 
-        <VBox spacing="4.0" alignment="CENTER_LEFT">
-            <Label text="Phone Number" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+        <VBox spacing="3.0" alignment="CENTER_LEFT">
+            <Label text="Phone Number" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
             <TextField fx:id="phoneField" promptText="e.g. 09123456789" prefHeight="35.0"
                        style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
 
-        <VBox spacing="4.0" alignment="CENTER_LEFT">
+        <VBox spacing="3.0" alignment="CENTER_LEFT">
             <Label text="Email Address" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
             <TextField fx:id="emailField" promptText="e.g. name@email.com" prefHeight="35.0"
                        style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
 
-        <VBox spacing="4.0" alignment="CENTER_LEFT">
-            <Label text="Password" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+        <VBox spacing="3.0" alignment="CENTER_LEFT">
+            <Label text="Vehicle Info" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
+            <TextField fx:id="vehicleField" promptText="e.g. Toyota Vios (ABC-123)" prefHeight="35.0"
+                       style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
+        </VBox>
+
+        <VBox spacing="3.0" alignment="CENTER_LEFT">
+            <Label text="Password" textFill="#dcdde1" style="-fx-font-weight: bold; -fx-font-size: 11px;" />
             <PasswordField fx:id="passwordField" promptText="Create secure password" prefHeight="35.0"
                            style="-fx-background-color: #718093; -fx-text-fill: white; -fx-prompt-text-fill: #b2bec3; -fx-background-radius: 6px;"/>
         </VBox>
     </VBox>
 
-    <VBox alignment="CENTER" spacing="12.0">
-        <Button fx:id="signUpButton" text="REGISTER &amp; GO TO LOGIN" onAction="#handleSignUp" prefWidth="240.0" prefHeight="40.0"
-                style="-fx-background-color: #10ac84; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20px; -fx-cursor: hand;"/>
+    <VBox alignment="CENTER" spacing="10.0">
+        <Button fx:id="signUpButton" text="REGISTER AS DRIVER" onAction="#handleSignUp" prefWidth="240.0" prefHeight="40.0"
+                style="-fx-background-color: #00d2d3; -fx-text-fill: #1e272e; -fx-font-weight: bold; -fx-font-size: 13px; -fx-background-radius: 20px; -fx-cursor: hand;"/>
 
         <Button text="Back to Login" onAction="#handleBackToLogin" style="-fx-background-color: transparent; -fx-text-fill: #00d2d3; -fx-underline: true; -fx-cursor: hand;"/>
 

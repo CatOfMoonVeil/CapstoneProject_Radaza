@@ -15,16 +15,16 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.regex.Pattern;
 
-public class SignUpController {
+public class DriverSignUpController {
 
     @FXML private TextField nameField;
     @FXML private TextField phoneField;
     @FXML private TextField emailField;
+    @FXML private TextField vehicleField;
     @FXML private PasswordField passwordField;
     @FXML private Button signUpButton;
     @FXML private Label statusLabel;
 
-    // Standard structural email filter format regex pattern
     private static final Pattern EMAIL_REGEX = Pattern.compile(
             "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
     );
@@ -34,22 +34,24 @@ public class SignUpController {
         String name = nameField.getText().trim();
         String phone = phoneField.getText().trim();
         String email = emailField.getText().trim();
+        String vehicle = vehicleField.getText().trim();
         String password = passwordField.getText().trim();
 
-        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            showError("All registration fields are required!");
+        if (name.isEmpty() || phone.isEmpty() || email.isEmpty() || vehicle.isEmpty() || password.isEmpty()) {
+            showError("All driver registration fields are required!");
             return;
         }
 
         if (!isValidEmail(email)) {
-            showError("Please enter a valid email structural format (e.g., mail@xyz.com)");
+            showError("Please enter a valid email format.");
             return;
         }
 
         try {
-            UserSession.registerPassenger(name, phone, email, password);
+            UserSession.registerDriver(name, phone, email, password, vehicle);
+
             statusLabel.setStyle("-fx-text-fill: #10ac84; -fx-font-weight: bold;");
-            statusLabel.setText("Registration successful! Redirecting...");
+            statusLabel.setText("Driver Profile Created! Redirecting...");
             handleBackToLogin();
         } catch (SQLException e) {
             if (e.getMessage().contains("already registered")) {
