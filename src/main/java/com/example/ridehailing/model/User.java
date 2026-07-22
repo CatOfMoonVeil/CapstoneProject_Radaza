@@ -1,6 +1,10 @@
 package com.example.ridehailing.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     protected String name;
     protected String phone;
     protected String email;

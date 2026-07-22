@@ -1,8 +1,8 @@
-package com.example.ridehailing.model;
+package com.example.ridehailing.util;
 
-import com.example.ridehailing.util.DatabaseConnection;
-import com.example.ridehailing.util.PasswordHasher;
-import com.example.ridehailing.util.SessionManager;
+import com.example.ridehailing.model.Driver;
+import com.example.ridehailing.model.Passenger;
+import com.example.ridehailing.model.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -10,7 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserSession {
+
     private static User currentUser;
+
 
     public static User getCurrentUser() {
         if (currentUser == null && SessionManager.hasActiveSession()) {
@@ -19,15 +21,18 @@ public class UserSession {
         return currentUser;
     }
 
+
     public static Passenger getLoggedInPassenger() {
         User user = getCurrentUser();
         return (user instanceof Passenger) ? (Passenger) user : null;
     }
 
+
     public static Driver getLoggedInDriver() {
         User user = getCurrentUser();
         return (user instanceof Driver) ? (Driver) user : null;
     }
+
 
     public static void setLoggedInUser(User user) {
         currentUser = user;
@@ -38,10 +43,12 @@ public class UserSession {
         }
     }
 
+
     public static void logout() {
         currentUser = null;
         SessionManager.cleanSession();
     }
+
 
     public static String checkUserRoleAndLogin(String email, String password) {
         String query = "SELECT role FROM users WHERE email = ? AND password = ?";
@@ -64,6 +71,7 @@ public class UserSession {
         return null;
     }
 
+
     public static Passenger loginPassenger(String email, String password) {
         String query = "SELECT u.user_id, p.passenger_id, p.name, p.phone, u.email " +
                 "FROM users u JOIN passengers p ON u.user_id = p.user_id " +
@@ -85,15 +93,16 @@ public class UserSession {
                             rs.getString("phone"),
                             rs.getString("email")
                     );
-                    setLoggedInUser(p); // Serialize upon login
+                    setLoggedInUser(p); // Serializes user object to session.dat
                     return p;
                 }
             }
         } catch (SQLException e) {
-            System.err.println("Database login error: " + e.getMessage());
+            System.err.println("Database passenger login error: " + e.getMessage());
         }
         return null;
     }
+
 
     public static Driver loginDriver(String email, String password) {
         String query = "SELECT u.user_id, d.driver_id, d.name, d.phone, d.vehicle, u.email " +
@@ -116,7 +125,7 @@ public class UserSession {
                             rs.getString("phone"),
                             rs.getString("vehicle")
                     );
-                    setLoggedInUser(d); // Serialize upon login
+                    setLoggedInUser(d); // Serializes user object to session.dat
                     return d;
                 }
             }
@@ -125,6 +134,7 @@ public class UserSession {
         }
         return null;
     }
+
 
     public static void registerPassenger(String name, String phone, String email, String password) throws SQLException {
         String insertUserQuery = "INSERT INTO users (email, password, role) VALUES (?, ?, 'PASSENGER')";
@@ -135,7 +145,7 @@ public class UserSession {
 
         try {
             conn = DatabaseConnection.getConnection();
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false); // Start transaction
 
             try (PreparedStatement userStmt = conn.prepareStatement(insertUserQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 userStmt.setString(1, email);
@@ -155,7 +165,7 @@ public class UserSession {
                     passStmt.executeUpdate();
                 }
             }
-            conn.commit();
+            conn.commit(); // Save changes
         } catch (SQLException e) {
             if (conn != null) conn.rollback();
             throw e;
@@ -164,6 +174,9 @@ public class UserSession {
         }
     }
 
+    /**
+     * Registers a new driver across 'users' and 'drivers' tables using a Database Transaction.
+     */
     public static void registerDriver(String name, String phone, String email, String password, String vehicle) throws SQLException {
         String insertUserQuery = "INSERT INTO users (email, password, role) VALUES (?, ?, 'DRIVER')";
         String insertDriverQuery = "INSERT INTO drivers (user_id, name, phone, vehicle, status) VALUES (?, ?, ?, ?, 'Available')";
@@ -173,7 +186,7 @@ public class UserSession {
 
         try {
             conn = DatabaseConnection.getConnection();
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(false); // Start transaction
 
             try (PreparedStatement userStmt = conn.prepareStatement(insertUserQuery, PreparedStatement.RETURN_GENERATED_KEYS)) {
                 userStmt.setString(1, email);
@@ -194,7 +207,7 @@ public class UserSession {
                     driveStmt.executeUpdate();
                 }
             }
-            conn.commit();
+            conn.commit(); // Save changes
         } catch (SQLException e) {
             if (conn != null) conn.rollback();
             throw e;
@@ -203,8 +216,12 @@ public class UserSession {
         }
     }
 
+    /**
+     * Queries and fetches the first available driver in the system.
+     */
     public static Driver fetchAvailableDriver() {
-        String query = "SELECT * FROM drivers WHERE status = 'Available' LIMIT 1";
+        // ORDER BY RAND() picks a random row from available drivers
+        String query = "SELECT * FROM drivers WHERE status = 'Available' ORDER BY RAND() LIMIT 1";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement stmt = conn.prepareStatement(query);
              ResultSet rs = stmt.executeQuery()) {

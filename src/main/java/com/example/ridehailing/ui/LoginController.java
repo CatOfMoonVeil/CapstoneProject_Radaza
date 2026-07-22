@@ -1,7 +1,8 @@
 package com.example.ridehailing.ui;
 
+import com.example.ridehailing.model.Driver;
 import com.example.ridehailing.model.Passenger;
-import com.example.ridehailing.model.UserSession;
+import com.example.ridehailing.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -35,15 +36,19 @@ public class LoginController {
         String role = UserSession.checkUserRoleAndLogin(usernameInput, passwordInput);
 
         if ("PASSENGER".equals(role)) {
-            Passenger matchedPassenger = UserSession.login(usernameInput, passwordInput);
+            Passenger matchedPassenger = UserSession.loginPassenger(usernameInput, passwordInput);
             if (matchedPassenger != null) {
-                UserSession.setLoggedInPassenger(matchedPassenger);
                 navigateToBooking();
             } else {
                 showErrorMessage();
             }
         } else if ("DRIVER".equals(role)) {
-            navigateToDriverDashboard();
+            Driver matchedDriver = UserSession.loginDriver(usernameInput, passwordInput);
+            if (matchedDriver != null) {
+                navigateToDriverDashboard();
+            } else {
+                showErrorMessage();
+            }
         } else {
             showErrorMessage();
         }
@@ -74,7 +79,7 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/DriverSignUpView.fxml"));
             Parent signUpRoot = fxmlLoader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(signUpRoot, 450, 580)); // Slightly taller to fit vehicle details
+            stage.setScene(new Scene(signUpRoot, 450, 580));
             stage.setTitle("Driver Registration");
         } catch (IOException e) {
             errorLabel.setText("Could not open driver registration.");
@@ -87,7 +92,7 @@ public class LoginController {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/BookingView.fxml"));
             Parent bookingRoot = fxmlLoader.load();
             Stage stage = (Stage) loginButton.getScene().getWindow();
-            stage.setScene(new Scene(bookingRoot, 450, 550));
+            stage.setScene(new Scene(bookingRoot, 450, 580));
             stage.setTitle("GoRide Terminal Panel");
         } catch (IOException e) {
             errorLabel.setText("Failed to transition navigation screens.");

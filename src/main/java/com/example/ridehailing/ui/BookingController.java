@@ -1,6 +1,7 @@
 package com.example.ridehailing.ui;
 
 import com.example.ridehailing.model.*;
+import com.example.ridehailing.util.UserSession;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -8,11 +9,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 public class BookingController {
 
@@ -25,6 +30,7 @@ public class BookingController {
 
     private Passenger currentPassenger;
     private Ride activeRide;
+    private Driver assignedDriver;
     private Task<Void> rideSequenceTask;
 
     @FXML
@@ -64,30 +70,31 @@ public class BookingController {
             @Override
             protected Void call() throws Exception {
                 updateLogAsync("\n--- Sequence: Driver Assignment Engine ---");
-                updateLogAsync("System: Querying active database grids... (Standby)");
+                updateLogAsync("System: Querying random available driver unit... (Standby)");
 
                 for (int i = 2; i > 0; i--) {
                     if (isCancelled()) return null;
                     Thread.sleep(1000);
                 }
 
-                Driver dbDriver = UserSession.fetchAvailableDriver();
+                // Queries database randomly via ORDER BY RAND()
+                assignedDriver = UserSession.fetchAvailableDriver();
 
-                if (dbDriver == null) {
-                    updateLogAsync("[Database System Message] No available drivers in this quadrant. Request failed.");
+                if (assignedDriver == null) {
+                    updateLogAsync("[Database System Message] No available drivers found. Request failed.");
                     cancel();
                     return null;
                 }
 
-                updateLogAsync("Database Log -> Retrieved Driver ID #" + dbDriver.getDriverId());
-                updateLogAsync("Assigned Unit: " + dbDriver.getName() + " running a " + dbDriver.getVehicle());
-                dbDriver.acceptRide(activeRide);
+                updateLogAsync("Database Log -> Retrieved Driver ID #" + assignedDriver.getDriverId());
+                updateLogAsync("Assigned Unit: " + assignedDriver.getName() + " driving " + assignedDriver.getVehicle());
+                assignedDriver.acceptRide(activeRide);
 
                 updateLogAsync("\n--- Sequence: Transit Execution ---");
-                updateLogAsync("Driver Info: Contact Unit at " + dbDriver.getPhone());
-                updateLogAsync("Driver: Unit arrived at " + activeRide.getPickupLocation());
+                updateLogAsync("Driver Contact: " + assignedDriver.getPhone());
+                updateLogAsync("Driver: Arrived at " + activeRide.getPickupLocation());
                 activeRide.updateStatus("In Progress");
-                dbDriver.startRide(activeRide);
+                assignedDriver.startRide(activeRide);
 
                 for (int i = 2; i > 0; i--) {
                     if (isCancelled()) return null;
@@ -97,7 +104,7 @@ public class BookingController {
 
                 if (isCancelled()) return null;
 
-                dbDriver.completeRide(activeRide);
+                assignedDriver.completeRide(activeRide);
                 activeRide.updateStatus("Completed");
 
                 updateLogAsync("\n--- Sequence: Billing Gateway ---");
@@ -107,24 +114,56 @@ public class BookingController {
 
                 updateLogAsync(String.format("Gateway Status: Payment Verified [$%.2f charged]", activeRide.getFare()));
 
-                updateLogAsync("\n--- Sequence: Rating & Dispatch ---");
-                currentPassenger.rateDriver(dbDriver, 5);
-                updateLogAsync("System: Transaction complete. Standby mode active.");
-
                 return null;
             }
         };
 
-        rideSequenceTask.setOnSucceeded(e -> toggleFormState(false));
-        rideSequenceTask.setOnFailed(e -> {
+        rideSequenceTask.setOnSucceeded(e -> Platform.runLater(() -> {
+            toggleFormState(false);
+            promptDriverRating(assignedDriver); // Shows rating popup dialog
+        }));
+
+        rideSequenceTask.setOnFailed(e -> Platform.runLater(() -> {
             log("[System Error] Background logic sequence failed.");
             toggleFormState(false);
-        });
-        rideSequenceTask.setOnCancelled(e -> toggleFormState(false));
+        }));
+
+        rideSequenceTask.setOnCancelled(e -> Platform.runLater(() -> toggleFormState(false)));
 
         Thread backgroundThread = new Thread(rideSequenceTask);
         backgroundThread.setDaemon(true);
         backgroundThread.start();
+    }
+
+    /**
+     * Interactive 1-5 Star Rating Dialog Box
+     */
+    private void promptDriverRating(Driver driver) {
+        if (driver == null) return;
+
+        List<String> ratingOptions = Arrays.asList(
+                "5 Stars - Excellent service!",
+                "4 Stars - Good trip",
+                "3 Stars - Average experience",
+                "2 Stars - Room for improvement",
+                "1 Star - Poor service"
+        );
+
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("5 Stars - Excellent service!", ratingOptions);
+        dialog.setTitle("Rate Your Driver");
+        dialog.setHeaderText("Trip Completed with " + driver.getName() + "!");
+        dialog.setContentText("How would you rate your driver (" + driver.getVehicle() + ")?");
+
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            String selected = result.get();
+            int stars = Character.getNumericValue(selected.charAt(0));
+
+            currentPassenger.rateDriver(driver, stars);
+            log(String.format("\n--- Rating Submitted ---\nYou rated %s: %d/5 Stars. Thank you!", driver.getName(), stars));
+        } else {
+            log("\n--- Rating Skipped ---\nSystem: Transaction complete. Standby mode active.");
+        }
     }
 
     @FXML
@@ -144,13 +183,11 @@ public class BookingController {
 
     @FXML
     private void handleLogOut() {
-        // Cancel running ride task prior to logging out
         if (rideSequenceTask != null && rideSequenceTask.isRunning()) {
             rideSequenceTask.cancel();
         }
 
-        // Clean up global static session
-        UserSession.setLoggedInPassenger(null);
+        UserSession.logout();
 
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/LoginView.fxml"));
@@ -177,6 +214,6 @@ public class BookingController {
         destinationField.setDisable(working);
         bookButton.setDisable(working);
         cancelButton.setDisable(!working);
-        logoutButton.setDisable(working); // Disable logout during a live ride booking cycle
+        logoutButton.setDisable(working);
     }
 }

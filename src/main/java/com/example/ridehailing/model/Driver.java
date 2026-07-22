@@ -1,6 +1,10 @@
 package com.example.ridehailing.model;
 
-public class Driver extends User {
+import java.io.Serializable;
+
+public class Driver extends User implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private int driverId;
     private String vehicle;
     private String status;

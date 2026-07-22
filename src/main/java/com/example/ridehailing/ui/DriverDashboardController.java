@@ -1,7 +1,7 @@
 package com.example.ridehailing.ui;
 
 import com.example.ridehailing.model.Driver;
-import com.example.ridehailing.model.UserSession;
+import com.example.ridehailing.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -26,7 +26,13 @@ public class DriverDashboardController {
 
     @FXML
     public void initialize() {
-        currentDriver = UserSession.fetchAvailableDriver();
+        // First attempt to load logged-in driver from session manager
+        currentDriver = UserSession.getLoggedInDriver();
+
+        // Fallback fetch if running stand-alone session
+        if (currentDriver == null) {
+            currentDriver = UserSession.fetchAvailableDriver();
+        }
 
         if (currentDriver != null) {
             driverWelcomeLabel.setText("Active Driver: " + currentDriver.getName());
@@ -47,20 +53,23 @@ public class DriverDashboardController {
             statusLabel.setText("OFFLINE - Standby");
             statusLabel.setStyle("-fx-text-fill: #ff4757; -fx-font-weight: bold;");
             toggleAvailabilityButton.setText("GO ONLINE");
-            toggleAvailabilityButton.setStyle("-fx-background-color: #10ac84; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20px;");
+            toggleAvailabilityButton.setStyle("-fx-background-color: #10ac84; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20px; -fx-cursor: hand;");
             log("System Action -> Status updated to OFFLINE. Booking dispatches paused.");
         } else {
             isAvailable = true;
             statusLabel.setText("ONLINE - Available");
             statusLabel.setStyle("-fx-text-fill: #10ac84; -fx-font-weight: bold;");
             toggleAvailabilityButton.setText("GO OFFLINE");
-            toggleAvailabilityButton.setStyle("-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20px;");
+            toggleAvailabilityButton.setStyle("-fx-background-color: #ff4757; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20px; -fx-cursor: hand;");
             log("System Action -> Status updated to ONLINE. Ready for passenger match cycles.");
         }
     }
 
     @FXML
     private void handleLogOut() {
+        // Purges session memory and deletes session.dat file from disk
+        UserSession.logout();
+
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/ridehailing/ui/LoginView.fxml"));
             Parent loginRoot = fxmlLoader.load();
